@@ -25,7 +25,7 @@ spec:
             - containerPort: 3000
           resources:
             limits:
-              mermory: "512Mi"
+              memory: "512Mi"
               cpu: "500m"
             requests:
               memory: "256Mi"
