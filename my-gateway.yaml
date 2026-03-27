@@ -4,8 +4,8 @@ metadata:
   name: my-gateway
   namespace: gateway-ns
 spec:
- GatewayClassName: kgateway
- listeners:
+  gatewayClassName: kgateway
+  listeners:
   - name: http
     protocol: HTTP
     port: 80
