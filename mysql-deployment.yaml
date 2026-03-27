@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-sql
+  namespace: gateway-ns
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  selector:
+    matchLabels:
+      app: my-sql
+  template:
+    metadata:
+      labels:
+        app: my-sql
+    spec:
+      containers:
+        - name: my-sql
+          image: mariadb:latest
+          ports:
+            - containerPort: 3306
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: MARIADB_ROOT_PASSWORD
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: DB_PASSWORD
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: DB_PORT
+            - name: GRIEVANCE_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: GRIEVANCE_DB
+            - name: LEAVE_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: LEAVE_DB
+            - name: TIMETABLE_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: TIMETABLE_DB
+            - name: EXAMS_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: EXAMS_DB
+          volumeMounts:
+            - name: mariadb-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mariadb-storage
+          persistentVolumeClaim:
+            claimName: mariadb-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: gateway-ns
+spec:
+  selector:
+    app: my-sql
+  ports:
+    - port: 3306
+      targetPort: 3306
+  type: ClusterIP
+            
