@@ -93,7 +93,7 @@ spec:
         name: mariadb-storage
       spec:
         accessModes:
-          - ReadWriteOnce
+          - ReadWriteMany
         storageClassName: my-storage-class
         resources:
           requests:
