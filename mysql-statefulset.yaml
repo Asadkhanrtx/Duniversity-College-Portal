@@ -5,7 +5,7 @@ metadata:
   namespace: gateway-ns
 spec:
   serviceName: mariadb
-  replicas: 3
+  replicas: 1
   minReadySeconds: 10
   selector:
     matchLabels:
