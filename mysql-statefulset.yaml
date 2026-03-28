@@ -4,20 +4,19 @@ metadata:
   name: my-sql
   namespace: gateway-ns
 spec:
+  serviceName: mariadb
   replicas: 3
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 25%
-      maxSurge: 25%
+  minReadySeconds: 10
   selector:
     matchLabels:
       app: my-sql
+
   template:
     metadata:
       labels:
         app: my-sql
     spec:
+      terminationGracePeriodSeconds: 30
       containers:
         - name: my-sql
           image: mariadb:latest
@@ -30,6 +29,7 @@ spec:
             requests:
               memory: "256Mi"
               cpu: "250m"
+
           env:
             - name: MARIADB_ROOT_PASSWORD
               valueFrom:
@@ -76,18 +76,28 @@ spec:
                 configMapKeyRef:
                   name: duniversity-config
                   key: EXAMS_DB
+
           volumeMounts:
             - name: mariadb-storage
               mountPath: /var/lib/mysql
             - name: config-volume
               mountPath: /docker-entrypoint-initdb.d
+
       volumes:
-        - name: mariadb-storage
-          persistentVolumeClaim:
-            claimName: mariadb-pvc
         - name: config-volume
           configMap:
             name: mariadb-init-script
+
+  volumeClaimTemplates:
+    - metadata:
+        name: mariadb-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: my-storage-class
+        resources:
+          requests:
+            storage: 2Gi
 ---
 apiVersion: v1
 kind: Service
@@ -95,10 +105,10 @@ metadata:
   name: mariadb
   namespace: gateway-ns
 spec:
+  clusterIP: None
   selector:
     app: my-sql
   ports:
     - port: 3306
       targetPort: 3306
-  type: ClusterIP
             
