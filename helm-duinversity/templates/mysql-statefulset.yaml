@@ -92,8 +92,7 @@ spec:
     - metadata:
         name: mariadb-storage
       spec:
-        accessModes:
-          - ReadWriteMany
+        accessModes: {{ .Values.mysql_accessModes }}
         storageClassName: my-storage-class
         resources:
           requests:

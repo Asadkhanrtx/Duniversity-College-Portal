@@ -19,3 +19,5 @@ mysql_image:
   tag: latest
 mysql_ports:
   containerPort: 3306
+mysql_accessModes: 
+  - ReadWriteOnce
