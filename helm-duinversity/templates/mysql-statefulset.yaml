@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-sql
+  namespace: gateway-ns
+spec:
+  serviceName: mariadb
+  replicas: 1
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      app: my-sql
+
+  template:
+    metadata:
+      labels:
+        app: my-sql
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: my-sql
+          image: mariadb:latest
+          ports:
+            - containerPort: 3306
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: MARIADB_ROOT_PASSWORD
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: DB_PASSWORD
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: DB_PORT
+            - name: GRIEVANCE_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: GRIEVANCE_DB
+            - name: LEAVE_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: LEAVE_DB
+            - name: TIMETABLE_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: TIMETABLE_DB
+            - name: EXAMS_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: duniversity-config
+                  key: EXAMS_DB
+
+          volumeMounts:
+            - name: mariadb-storage
+              mountPath: /var/lib/mysql
+            - name: config-volume
+              mountPath: /docker-entrypoint-initdb.d
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: mariadb-init-script
+
+  volumeClaimTemplates:
+    - metadata:
+        name: mariadb-storage
+      spec:
+        accessModes:
+          - ReadWriteMany
+        storageClassName: my-storage-class
+        resources:
+          requests:
+            storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  namespace: gateway-ns
+spec:
+  clusterIP: None
+  selector:
+    app: my-sql
+  ports:
+    - port: 3306
+      targetPort: 3306
+            
