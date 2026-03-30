@@ -2,6 +2,7 @@ app:
   name: duniversity-deployment
 
 replicaCount: 1
+mysql_replicaCount: 2
 
 image:
   repository: asadoblivion/duniversity-college-portal
