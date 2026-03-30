@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: duniversity-deployment
+  name: {{ .Values.app.name }}
   namespace: gateway-ns
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -20,9 +20,9 @@ spec:
     spec:
       containers:
         - name: duniversity
-          image: asadoblivion/duniversity-college-portal:v1.0
+          image: {{ .Values.image.repository }}: {{ .Values.image.tag }}
           ports:
-            - containerPort: 3000
+            - containerPort: {{ .Values.ports.containerPort }}
           resources:
             limits:
               memory: "512Mi"

@@ -1,0 +1,11 @@
+app:
+  name: duniversity-deployment
+
+replicaCount: 2
+
+image:
+  repository: asadoblivion/duniversity-college-portal
+  tag: v1.0
+
+ports:
+  containerPort: 3000
