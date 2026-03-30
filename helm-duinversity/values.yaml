@@ -15,7 +15,7 @@ ports:
 mysql_replicaCount: 2
 mysql_terminationGracePeriodSeconds: 30
 mysql_image: 
-  repository:mariadb
+  repository: mariadb
   tag: latest
 mysql_ports:
   containerPort: 3306
