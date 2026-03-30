@@ -16,12 +16,12 @@ spec:
       labels:
         app: my-sql
     spec:
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       containers:
         - name: my-sql
-          image: mariadb:latest
+          image: {{ .Values.mysql_image.repository }}:{{ .Values.mysql_image.tag }}
           ports:
-            - containerPort: 3306
+            - containerPort: {{ .Values.mysql_ports.containerPort }}
           resources:
             limits:
               memory: "512Mi"

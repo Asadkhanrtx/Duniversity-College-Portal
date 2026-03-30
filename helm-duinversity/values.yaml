@@ -2,7 +2,7 @@ app:
   name: duniversity-deployment
 
 replicaCount: 1
-mysql_replicaCount: 2
+
 
 image:
   repository: asadoblivion/duniversity-college-portal
@@ -10,3 +10,12 @@ image:
 
 ports:
   containerPort: 3000
+
+# mysql parameters
+mysql_replicaCount: 2
+mysql_terminationGracePeriodSeconds: 30
+mysql_image: 
+  repository:mariadb
+  tag: latest
+mysql_ports:
+  containerPort: 3306
