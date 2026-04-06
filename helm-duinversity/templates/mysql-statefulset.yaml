@@ -82,7 +82,11 @@ spec:
               mountPath: /var/lib/mysql
             - name: config-volume
               mountPath: /docker-entrypoint-initdb.d
-
+      tolerations:
+      - key: "training"
+        operator: "Equal"
+        value: "devops"
+        effect: "NoSchedule"
       volumes:
         - name: config-volume
           configMap:
