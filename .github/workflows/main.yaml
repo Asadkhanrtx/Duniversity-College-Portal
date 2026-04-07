@@ -34,7 +34,7 @@ jobs:
  
     - name: Tag image for Docker Hub
       run: |
-        docker tag duniversity-app:v1.0.0 \
+        docker tag duniversity:v1.0.0 \
         ${{ secrets.DOCKER_NAME }}/duniversity:v1.0.0
  
     - name: push to Docker Hub
