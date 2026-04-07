@@ -1,18 +1,28 @@
-name: CI-CD Pipeline
-
+name: Hospital image build & scan Flow
+ 
 on:
   push:
     branches:
-      - main
-
+    - 'deploying'
+ 
 jobs:
-  build:
+  build-scan:
     runs-on: ubuntu-latest
-
+ 
     steps:
+ 
     - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Build Docker image
-      run: docker build -t myapp .
-
+      uses: actions/checkout@v4
+ 
+    - name: Build the image
+      run: |
+        docker build -t hospital-app:v1.0.0 .
+ 
+    - name: Scan the image
+      uses: aquasecurity/trivy-action@v0.20.0
+      with:
+        image-ref: hospital-app:v1.0.0
+        format: table
+        exit-code: 0
+        severity: HIGH,CRITICAL
+ 
