@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/Asadkhanrtx/Duniversity-College-Portal.git
     targetRevision: master
-    path: helm-duniversity
+    path: ./helm-duniversity
 
   destination:
     server: https://kubernetes.default.svc
