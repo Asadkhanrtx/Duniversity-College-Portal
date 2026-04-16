@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: duniversity-app
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/Asadkhanrtx/Duniversity-College-Portal.git
+    targetRevision: master
+    path: helm-duniversity
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: retail
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
