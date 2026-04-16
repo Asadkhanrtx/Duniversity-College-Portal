@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: duniversity-app
+  name: duniversity-apps
   namespace: argocd
 
 spec:
